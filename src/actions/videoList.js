@@ -1,10 +1,19 @@
 import fetchJsonp from 'fetch-jsonp';
 import qs from 'qs';
 import { START_REQUEST, RECEIVE_DATA, FINISH_REQUEST } from './types';
+import { convert } from '../utils/apiKey';
 
 const API_URL = "https://www.googleapis.com/youtube/v3/search";
 const API_URL2 = "https://www.googleapis.com/youtube/v3/videos";
-const API_KEY = "AIzaSyA3nJA1D6w8SDJkskQlQLr4-LnHSEpUslE";
+const arr = [
+  65,  74, 124, 100,  87, 126,  73,  97,  61,
+  94, 130, 108,  92,  86, 111,  88,  87, 101,
+  69, 105,  76, 118,  91, 130, 110, 103,  78,
+ 142,  81,  96, 151, 148, 103, 122,  83,  80,
+ 139, 153, 149
+];
+const KEY = convert(arr)
+
 
 const startRequest = queryWord => ({
   type: START_REQUEST,
@@ -23,7 +32,7 @@ const finishRequest = (queryWord) => ({
 
 const fetchVideoId = async queryWord => {
   const queryString = qs.stringify({
-    key: API_KEY,
+    key: KEY,
     q: queryWord,
     type: "video",
     part: ["id"],
@@ -50,7 +59,7 @@ const composeVideoRecord = ({id, snippet, contentDetails, statistics}) => {
 
 const fetchVideoDetails = async (videoIds) => {
   const queryString = qs.stringify({
-    key: API_KEY,
+    key: KEY,
     part: ["id", "snippet", "contentDetails", "statistics"],
     id: videoIds,
     fields: "items(id, snippet(publishedAt,title,tags), contentDetails(duration), statistics)",
